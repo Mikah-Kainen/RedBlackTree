@@ -33,5 +33,6 @@ namespace RedBlackTree
         {
             return Value.CompareTo(comparerNode.Value) < 0;
         }
+
     }
 }

@@ -80,11 +80,12 @@ namespace RedBlackTree
                 Count++;
                 return;
             }
-            Add(newNode, RootNode);
+            RootNode = Add(newNode, RootNode);
             Count++;
+            RootNode.isRed = false;
         }
 
-        private void Add(Node<T> targetNode, Node<T> currentNode)
+        private Node<T> Add(Node<T> targetNode, Node<T> currentNode)
         {
             if(currentNode == null)
             {
@@ -99,7 +100,7 @@ namespace RedBlackTree
             {
                 if (currentNode.LeftChild != null)
                 {
-                    Add(targetNode, currentNode.LeftChild);
+                    currentNode.LeftChild = Add(targetNode, currentNode.LeftChild);
                 }
                 else
                 {
@@ -110,7 +111,7 @@ namespace RedBlackTree
             {
                 if (currentNode.RightChild != null)
                 {
-                    Add(targetNode, currentNode.RightChild);
+                    currentNode.RightChild = Add(targetNode, currentNode.RightChild);
                 }
                 else
                 {
@@ -120,64 +121,87 @@ namespace RedBlackTree
 
             if(currentNode.RightChild != null && currentNode.RightChild.isRed)
             {
-                LeftRotation(currentNode);
+                currentNode = LeftRotation(currentNode);
             }
             if(currentNode.LeftChild != null && currentNode.LeftChild.LeftChild != null && currentNode.LeftChild.isRed && currentNode.LeftChild.LeftChild.isRed)
             {
-                RightRotation(currentNode);
+                currentNode = RightRotation(currentNode);
             }
+            return currentNode;
         }
 
-        private void LeftRotation(Node<T> targetNode)
+        private Node<T> RightRotation(Node<T> targetNode)
         {
-            Node<T> parentNode = FindParent(targetNode);
-            Node<T> tempHolder = targetNode.RightChild;
-
-            targetNode.RightChild = targetNode.RightChild.LeftChild;
-            tempHolder.LeftChild = targetNode;
-            tempHolder.isRed = targetNode.isRed;
-            tempHolder.LeftChild.isRed = true;
-            if(parentNode.Equals(targetNode))
-            {
-                RootNode = tempHolder;
-            }
-            else
-            {
-                if(parentNode.RightChild != null && parentNode.RightChild.Equals(targetNode))
-                {
-                    parentNode.RightChild = tempHolder;
-                }
-                else
-                {
-                    parentNode.LeftChild = tempHolder;
-                }
-            }
-        }
-
-        private void RightRotation(Node<T> targetNode)
-        {
-            Node<T> parentNode = FindParent(targetNode);
             Node<T> tempHolder = targetNode.LeftChild;
-
-            targetNode.LeftChild = targetNode.LeftChild.RightChild;
+            targetNode.LeftChild = tempHolder.RightChild;
             tempHolder.RightChild = targetNode;
+
             tempHolder.isRed = targetNode.isRed;
-            tempHolder.RightChild.isRed = true;
-            if (parentNode == null)
-            {
-                RootNode = tempHolder;
-            }
-            else
-            {
-                if (parentNode.RightChild != null && parentNode.RightChild.Equals(targetNode))
-                {
-                    parentNode.RightChild = tempHolder;
-                }
-                else
-                {
-                    parentNode.LeftChild = tempHolder;
-                }
-            }
+            targetNode.isRed = true;
+            return tempHolder;
         }
+
+        private Node<T> LeftRotation(Node<T> targetNode)
+        {
+            Node<T> tempHolder = targetNode.RightChild;
+            targetNode.RightChild = tempHolder.LeftChild;
+            tempHolder.LeftChild = targetNode;
+
+            tempHolder.isRed = targetNode.isRed;
+            targetNode.isRed = true;
+            return tempHolder;
+        }
+
+        //private void LeftRotation(Node<T> targetNode)
+        //{
+        //    Node<T> parentNode = FindParent(targetNode);
+        //    Node<T> tempHolder = targetNode.RightChild;
+
+        //    targetNode.RightChild = targetNode.RightChild.LeftChild;
+        //    tempHolder.LeftChild = targetNode;
+        //    tempHolder.isRed = targetNode.isRed;
+        //    tempHolder.LeftChild.isRed = true;
+        //    if(parentNode.Equals(targetNode))
+        //    {
+        //        RootNode = tempHolder;
+        //    }
+        //    else
+        //    {
+        //        if(parentNode.RightChild != null && parentNode.RightChild.Equals(targetNode))
+        //        {
+        //            parentNode.RightChild = tempHolder;
+        //        }
+        //        else
+        //        {
+        //            parentNode.LeftChild = tempHolder;
+        //        }
+        //    }
+        //}
+
+        //private void RightRotation(Node<T> targetNode)
+        //{
+        //    Node<T> parentNode = FindParent(targetNode);
+        //    Node<T> tempHolder = targetNode.LeftChild;
+
+        //    targetNode.LeftChild = targetNode.LeftChild.RightChild;
+        //    tempHolder.RightChild = targetNode;
+        //    tempHolder.isRed = targetNode.isRed;
+        //    tempHolder.RightChild.isRed = true;
+        //    if (parentNode == null)
+        //    {
+        //        RootNode = tempHolder;
+        //    }
+        //    else
+        //    {
+        //        if (parentNode.RightChild != null && parentNode.RightChild.Equals(targetNode))
+        //        {
+        //            parentNode.RightChild = tempHolder;
+        //        }
+        //        else
+        //        {
+        //            parentNode.LeftChild = tempHolder;
+        //        }
+        //    }
+        //}
     }
 }
