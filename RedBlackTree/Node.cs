@@ -28,5 +28,10 @@ namespace RedBlackTree
 
             return LeftChild.isRed && RightChild.isRed;
         }
+
+        public bool IsLessThan(Node<T> comparerNode)
+        {
+            return Value.CompareTo(comparerNode.Value) < 0;
+        }
     }
 }

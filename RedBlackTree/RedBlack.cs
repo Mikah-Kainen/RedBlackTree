@@ -15,6 +15,28 @@ namespace RedBlackTree
             RootNode = null;
         }
 
+        private Node<T> FindParent(Node<T> targetNode)
+        {
+            Node<T> currentNode = RootNode;
+            Node<T> previousNode = RootNode;
+            while(currentNode != null)
+            {
+                if(currentNode.Equals(targetNode))
+                {
+                    return previousNode;
+                }
+                if (targetNode.IsLessThan(currentNode))
+                {
+                    currentNode = currentNode.LeftChild;
+                }
+                else
+                {
+                    currentNode = currentNode.RightChild;
+                }
+            }
+            return null;
+        }
+
         private bool isNodeRed(Node<T> targetNode)
         {
             if (targetNode == null)
@@ -59,11 +81,51 @@ namespace RedBlackTree
                 return;
             }
             Add(newNode, RootNode);
+            Count++;
         }
 
         private void Add(Node<T> targetNode, Node<T> currentNode)
         {
+            if(currentNode == null)
+            {
+                throw new Exception("Something Went Wrong!!");
+            }
 
+            if(currentNode.IsFourNode())
+            {
+                FlipColor(currentNode);
+            }
+            if(targetNode.IsLessThan(currentNode))
+            {
+                if (currentNode.LeftChild != null)
+                {
+                    Add(targetNode, currentNode.LeftChild);
+                }
+                else
+                {
+                    currentNode.LeftChild = targetNode;
+                }          
+            }
+            else
+            {
+                if (currentNode.RightChild != null)
+                {
+                    Add(targetNode, currentNode.RightChild);
+                }
+                else
+                {
+                    currentNode.RightChild = targetNode;
+                }
+            }
+
+            if(currentNode.RightChild != null && currentNode.RightChild.isRed)
+            {
+                LeftRotation(currentNode);
+            }
+            if(currentNode.LeftChild != null && currentNode.LeftChild.LeftChild != null && currentNode.LeftChild.isRed && currentNode.LeftChild.LeftChild.isRed)
+            {
+                RightRotation(currentNode);
+            }
         }
 
         private void LeftRotation(Node<T> targetNode)
@@ -73,13 +135,15 @@ namespace RedBlackTree
 
             targetNode.RightChild = targetNode.RightChild.LeftChild;
             tempHolder.LeftChild = targetNode;
-            if(parentNode == null)
+            tempHolder.isRed = targetNode.isRed;
+            tempHolder.LeftChild.isRed = true;
+            if(parentNode.Equals(targetNode))
             {
                 RootNode = tempHolder;
             }
             else
             {
-                if(parentNode.RightChild.Equals(targetNode))
+                if(parentNode.RightChild != null && parentNode.RightChild.Equals(targetNode))
                 {
                     parentNode.RightChild = tempHolder;
                 }
@@ -88,12 +152,32 @@ namespace RedBlackTree
                     parentNode.LeftChild = tempHolder;
                 }
             }
-
         }
 
         private void RightRotation(Node<T> targetNode)
         {
+            Node<T> parentNode = FindParent(targetNode);
+            Node<T> tempHolder = targetNode.LeftChild;
 
+            targetNode.LeftChild = targetNode.LeftChild.RightChild;
+            tempHolder.RightChild = targetNode;
+            tempHolder.isRed = targetNode.isRed;
+            tempHolder.RightChild.isRed = true;
+            if (parentNode == null)
+            {
+                RootNode = tempHolder;
+            }
+            else
+            {
+                if (parentNode.RightChild != null && parentNode.RightChild.Equals(targetNode))
+                {
+                    parentNode.RightChild = tempHolder;
+                }
+                else
+                {
+                    parentNode.LeftChild = tempHolder;
+                }
+            }
         }
     }
 }

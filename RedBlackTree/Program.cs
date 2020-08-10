@@ -6,7 +6,18 @@ namespace RedBlackTree
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            RedBlack<int> Tree = new RedBlack<int>();
+        
+            for(int i = 0; i < 10; i ++)
+            {
+                Tree.Add(i);
+            }
+
+            for(int i = 19; i > 10; i --)
+            {
+                Tree.Add(i);
+            }
+
         }
     }
 }
