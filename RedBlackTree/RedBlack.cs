@@ -19,9 +19,9 @@ namespace RedBlackTree
         {
             Node<T> currentNode = RootNode;
             Node<T> previousNode = RootNode;
-            while(currentNode != null)
+            while (currentNode != null)
             {
-                if(currentNode.Equals(targetNode))
+                if (currentNode.Equals(targetNode))
                 {
                     return previousNode;
                 }
@@ -72,63 +72,103 @@ namespace RedBlackTree
 
         public void Add(T targetValue)
         {
-            Node<T> newNode = new Node<T>(targetValue);
-            if(RootNode == null)
-            {
-                RootNode = newNode;
-                newNode.isRed = false;
-                Count++;
-                return;
-            }
-            RootNode = Add(newNode, RootNode);
+            RootNode = Add(RootNode, targetValue);
             Count++;
             RootNode.isRed = false;
         }
 
-        private Node<T> Add(Node<T> targetNode, Node<T> currentNode)
+        private Node<T> Add(Node<T> currentNode, T value)
         {
-            if(currentNode == null)
+            if (currentNode == null)
             {
-                throw new Exception("Something Went Wrong!!");
+                return new Node<T>(value);
             }
 
-            if(currentNode.IsFourNode())
+            if (currentNode.IsFourNode())
             {
                 FlipColor(currentNode);
             }
-            if(targetNode.IsLessThan(currentNode))
+
+            if (value.CompareTo(currentNode.Value) < 0)
             {
-                if (currentNode.LeftChild != null)
-                {
-                    currentNode.LeftChild = Add(targetNode, currentNode.LeftChild);
-                }
-                else
-                {
-                    currentNode.LeftChild = targetNode;
-                }          
+                currentNode.LeftChild = Add(currentNode.LeftChild, value);
             }
             else
             {
-                if (currentNode.RightChild != null)
-                {
-                    currentNode.RightChild = Add(targetNode, currentNode.RightChild);
-                }
-                else
-                {
-                    currentNode.RightChild = targetNode;
-                }
+                currentNode.RightChild = Add(currentNode.RightChild, value);
             }
 
-            if(currentNode.RightChild != null && currentNode.RightChild.isRed)
+            if (currentNode.RightChild != null && currentNode.RightChild.isRed)
             {
                 currentNode = LeftRotation(currentNode);
             }
-            if(currentNode.LeftChild != null && currentNode.LeftChild.LeftChild != null && currentNode.LeftChild.isRed && currentNode.LeftChild.LeftChild.isRed)
+
+            if (currentNode.LeftChild != null && currentNode.LeftChild.LeftChild != null && currentNode.LeftChild.isRed && currentNode.LeftChild.LeftChild.isRed)
             {
                 currentNode = RightRotation(currentNode);
             }
             return currentNode;
         }
+
+        //public void Add(T targetValue)
+        //{
+        //    Node<T> newNode = new Node<T>(targetValue);
+        //    if (RootNode == null)
+        //    {
+        //        RootNode = newNode;
+        //        newNode.isRed = false;
+        //        Count++;
+        //        return;
+        //    }
+        //    RootNode = Add(newNode, RootNode);
+        //    Count++;
+        //    RootNode.isRed = false;
+        //}
+
+        //private Node<T> Add(Node<T> targetNode, Node<T> currentNode)
+        //{
+        //    if (currentNode == null)
+        //    {
+        //        throw new Exception("Something Went Wrong!!");
+        //    }
+
+        //    if (currentNode.IsFourNode())
+        //    {
+        //        FlipColor(currentNode);
+        //    }
+        //    if (targetNode.IsLessThan(currentNode))
+        //    {
+        //        if (currentNode.LeftChild != null)
+        //        {
+        //            currentNode.LeftChild = Add(targetNode, currentNode.LeftChild);
+        //        }
+        //        else
+        //        {
+        //            currentNode.LeftChild = targetNode;
+        //        }
+        //    }
+        //    else
+        //    {
+        //        if (currentNode.RightChild != null)
+        //        {
+        //            currentNode.RightChild = Add(targetNode, currentNode.RightChild);
+        //        }
+        //        else
+        //        {
+        //            currentNode.RightChild = targetNode;
+        //        }
+        //    }
+
+        //    if (currentNode.RightChild != null && currentNode.RightChild.isRed)
+        //    {
+        //        currentNode = LeftRotation(currentNode);
+        //    }
+        //    if (currentNode.LeftChild != null && currentNode.LeftChild.LeftChild != null && currentNode.LeftChild.isRed && currentNode.LeftChild.LeftChild.isRed)
+        //    {
+        //        currentNode = RightRotation(currentNode);
+        //    }
+        //    return currentNode;
+        //}
 
         private Node<T> RightRotation(Node<T> targetNode)
         {
