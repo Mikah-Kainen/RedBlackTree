@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Xml;
 
 namespace RedBlackTree
 {
@@ -37,7 +38,29 @@ namespace RedBlackTree
             return null;
         }
 
-        private bool isNodeRed(Node<T> targetNode)
+        public Node<T> Contains(T targetValue)
+        {
+            Node<T> currentNode = RootNode;
+
+            while (currentNode != null)
+            {
+                if (currentNode.Value.Equals(targetValue))
+                {
+                    return currentNode;
+                }
+                else if (targetValue.CompareTo(currentNode.Value) < 0)
+                {
+                    currentNode = currentNode.LeftChild;
+                }
+                else
+                {
+                    currentNode = currentNode.RightChild;
+                }
+            }
+            return null;
+        }
+
+        private bool IsNodeRed(Node<T> targetNode)
         {
             if (targetNode == null)
             {
@@ -45,6 +68,7 @@ namespace RedBlackTree
             }
             return targetNode.isRed;
         }
+
 
         private void FlipColor(Node<T> targetNode)
         {
@@ -103,9 +127,99 @@ namespace RedBlackTree
                 currentNode = LeftRotation(currentNode);
             }
 
-            if (currentNode.LeftChild != null && currentNode.LeftChild.LeftChild != null && currentNode.LeftChild.isRed && currentNode.LeftChild.LeftChild.isRed)
+            if (IsNodeRed(currentNode.LeftChild) && IsNodeRed(currentNode.LeftChild.LeftChild))
             {
                 currentNode = RightRotation(currentNode);
+            }
+            return currentNode;
+        }
+
+        public bool Remove(T targetValue)
+        {
+            Node<T> targetNode = Contains(targetValue);
+            if(targetNode == null)
+            {
+                return false;
+            }
+            return Remove(RootNode, targetNode);
+        }
+
+        private bool Remove(Node<T> currentNode, Node<T> targetNode)
+        {
+            if(targetNode.IsLessThan(currentNode))
+            {
+
+            }
+        }
+
+        public Node<T> MoveRedLeft(Node<T> currentNode)
+        {
+            if(!IsNodeRed(currentNode.LeftChild) || currentNode == null)
+            {
+                throw new Exception("MoveRedLeft called improperly");
+            }
+
+            FlipColor(currentNode);
+            if(IsNodeRed(currentNode.RightChild) && IsNodeRed(currentNode.RightChild.LeftChild))
+            {
+                currentNode.RightChild = RightRotation(currentNode.RightChild);
+                currentNode = LeftRotation(currentNode);
+                FlipColor(currentNode);
+            }
+
+            ////////////////////////////////////
+            //////////////////
+            ///WORK ON THIS PART OVER HERE
+            ///??????///////////////////////////////////////////
+            ///////////////////
+            ///
+            /// 
+            /// 
+            /// 
+            /// 
+            /// 
+            /// 
+            /// 
+            /// 
+            /// 
+            /// 
+            /// 
+            /// 
+            /// 
+            /// 
+            /// 
+            /// 
+            /// 
+            /// 
+            /// 
+            /// 
+            /// 
+            /// 
+            /// 
+            /// 
+            /// 
+            /// 
+            /// 
+            /// 
+            /// 
+            /////////////////////////////
+            //////////////////////////////////////////
+            /////////////////////////
+            return currentNode;
+        }
+
+        public Node<T> MoveRedRight(Node<T> currentNode)
+        {
+            if(!IsNodeRed(currentNode.RightChild) || currentNode == null)
+            {
+                throw new Exception("MoveRedRight called improperly");
+            }
+
+            FlipColor(currentNode);
+            if(IsNodeRed(currentNode.LeftChild) && IsNodeRed(currentNode.LeftChild.LeftChild))
+            {
+                currentNode = RightRotation(currentNode);
+                FlipColor(currentNode);
             }
             return currentNode;
         }
