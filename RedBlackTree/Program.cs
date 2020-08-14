@@ -25,6 +25,9 @@ namespace RedBlackTree
             Tree.Add(3);
             Tree.Add(4);
             Tree.Add(1);
+            Tree.Remove(4);
+            Tree.Remove(20);
+            Tree.Remove(17);
         }
     }
 }

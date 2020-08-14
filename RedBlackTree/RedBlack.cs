@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
+using System.Xml.Serialization;
 
 namespace RedBlackTree
 {
@@ -179,17 +180,64 @@ namespace RedBlackTree
                 }
                 else
                 {
-                    if(!IsNodeRed(currentNode.RightChild) && !IsNodeRed(currentNode.RightChild.LeftChild))
+                    Node<T> MovedNode = currentNode;
+                    if (!IsNodeRed(currentNode.RightChild) && !IsNodeRed(currentNode.RightChild.LeftChild))
                     {
                         currentNode = MoveRedRight(currentNode);
+
+
+                        ////////////////////////////////
+                        ////////////////////////////
+                        //////////////////////////////
+                        ////////////////////////////////
+
+                    }
+                    else
+                    {
+                        Node<T> replacementNode = currentNode.RightChild.FindMin();
+                        currentNode.ReplaceValue(replacementNode);
+                        currentNode.RightChild = Remove(currentNode.RightChild, replacementNode);
                     }
                 }
             }
+
+            currentNode = Fixup(currentNode);
+            return currentNode;
+        }
+
+        public Node<T> Fixup(Node<T> currentNode)
+        {
+            if(IsNodeRed(currentNode.RightChild))
+            {
+                currentNode = LeftRotation(currentNode);
+            }
+            if(IsNodeRed(currentNode.LeftChild) && IsNodeRed(currentNode.LeftChild.LeftChild))
+            {
+                currentNode.LeftChild = RightRotation(currentNode.LeftChild);
+            }
+            if(currentNode.IsFourNode())
+            {
+                FlipColor(currentNode);
+            }
+            if(IsNodeRed(currentNode.LeftChild) && IsNodeRed(currentNode.LeftChild.RightChild))
+            {
+                Node<T> leftChild = currentNode.LeftChild;
+                if(IsNodeRed(leftChild.RightChild))
+                {
+                    leftChild = LeftRotation(leftChild);
+                }
+                if(IsNodeRed(leftChild.LeftChild) && IsNodeRed(leftChild.LeftChild.LeftChild))
+                {
+                    leftChild.LeftChild = RightRotation(leftChild.LeftChild);
+                }
+                currentNode.LeftChild = leftChild;
+            }
+            return currentNode;
         }
 
         public Node<T> MoveRedLeft(Node<T> currentNode)
         {
-            if(!IsNodeRed(currentNode.LeftChild) || currentNode == null)
+            if(IsNodeRed(currentNode.LeftChild) || currentNode == null)
             {
                 throw new Exception("MoveRedLeft called improperly");
             }
@@ -211,7 +259,7 @@ namespace RedBlackTree
 
         public Node<T> MoveRedRight(Node<T> currentNode)
         {
-            if(!IsNodeRed(currentNode.RightChild) || currentNode == null)
+            if(IsNodeRed(currentNode.RightChild) || currentNode == null)
             {
                 throw new Exception("MoveRedRight called improperly");
             }

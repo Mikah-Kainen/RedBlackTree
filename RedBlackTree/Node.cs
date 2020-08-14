@@ -38,5 +38,25 @@ namespace RedBlackTree
         {
             return RightChild == null && LeftChild == null;
         }
+
+        public Node<T> FindMin()
+        {
+            if(LeftChild == null)
+            {
+                return this;
+            }
+
+            Node<T> currentNode = LeftChild;
+            while(currentNode.LeftChild != null)
+            {
+                currentNode = currentNode.LeftChild;
+            }
+            return currentNode;
+        }
+
+        public void ReplaceValue(Node<T> replacementNode)
+        {
+            Value = replacementNode.Value;
+        }
     }
 }
