@@ -141,14 +141,49 @@ namespace RedBlackTree
             {
                 return false;
             }
-            return Remove(RootNode, targetNode);
+            RootNode = Remove(RootNode, targetNode);
+            return true;
         }
 
-        private bool Remove(Node<T> currentNode, Node<T> targetNode)
+        private Node<T> Remove(Node<T> currentNode, Node<T> targetNode)
         {
+            if(currentNode == null)
+            {
+                return null;
+            }
             if(targetNode.IsLessThan(currentNode))
             {
-
+                if(!IsNodeRed(currentNode.LeftChild) && !IsNodeRed(currentNode.LeftChild.LeftChild))
+                {
+                    currentNode = MoveRedLeft(currentNode);
+                }
+                currentNode.LeftChild = Remove(currentNode.LeftChild, targetNode);
+            }
+            else
+            {
+                if(IsNodeRed(currentNode.LeftChild))
+                {
+                    currentNode = RightRotation(currentNode);
+                }
+                if(targetNode.Equals(currentNode) && currentNode.IsLeafNode())
+                {
+                    return null;
+                }
+                else if(!targetNode.Equals(currentNode))
+                {
+                    if (!IsNodeRed(currentNode.RightChild) && !IsNodeRed(currentNode.RightChild.LeftChild))
+                    {
+                        currentNode = MoveRedRight(currentNode);
+                    }
+                    currentNode.RightChild = Remove(currentNode.RightChild, targetNode);
+                }
+                else
+                {
+                    if(!IsNodeRed(currentNode.RightChild) && !IsNodeRed(currentNode.RightChild.LeftChild))
+                    {
+                        currentNode = MoveRedRight(currentNode);
+                    }
+                }
             }
         }
 
@@ -165,46 +200,12 @@ namespace RedBlackTree
                 currentNode.RightChild = RightRotation(currentNode.RightChild);
                 currentNode = LeftRotation(currentNode);
                 FlipColor(currentNode);
+                if(IsNodeRed(currentNode.RightChild.RightChild))
+                {
+                    currentNode.RightChild = LeftRotation(currentNode.RightChild);
+                }
             }
 
-            ////////////////////////////////////
-            //////////////////
-            ///WORK ON THIS PART OVER HERE
-            ///??????///////////////////////////////////////////
-            ///////////////////
-            ///
-            /// 
-            /// 
-            /// 
-            /// 
-            /// 
-            /// 
-            /// 
-            /// 
-            /// 
-            /// 
-            /// 
-            /// 
-            /// 
-            /// 
-            /// 
-            /// 
-            /// 
-            /// 
-            /// 
-            /// 
-            /// 
-            /// 
-            /// 
-            /// 
-            /// 
-            /// 
-            /// 
-            /// 
-            /// 
-            /////////////////////////////
-            //////////////////////////////////////////
-            /////////////////////////
             return currentNode;
         }
 

@@ -34,5 +34,9 @@ namespace RedBlackTree
             return Value.CompareTo(comparerNode.Value) < 0;
         }
 
+        public bool IsLeafNode()
+        {
+            return RightChild == null && LeftChild == null;
+        }
     }
 }
