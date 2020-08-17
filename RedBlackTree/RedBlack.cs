@@ -171,25 +171,41 @@ namespace RedBlackTree
                 {
                     currentNode = RightRotation(currentNode);
                 }
-                if(currentNode.Equals(targetNode) && currentNode.IsLeafNode())
+                if (currentNode.Equals(targetNode) && currentNode.IsLeafNode())
                 {
                     currentNode = null;
                     return null;
                 }
-                else if(!currentNode.Equals(targetNode) || (!IsNodeRed(currentNode.RightChild) && !IsNodeRed(currentNode.RightChild.LeftChild)))
+                else if (!currentNode.Equals(targetNode))
                 {
-                    if(!IsNodeRed(currentNode.RightChild) && !IsNodeRed(currentNode.RightChild.LeftChild))
+                    if (!IsNodeRed(currentNode.RightChild) && !IsNodeRed(currentNode.RightChild.LeftChild))
                     {
                         currentNode = MoveRedRight(currentNode);
                     }
                     currentNode.RightChild = Remove(currentNode.RightChild, targetNode);
+                }
+                else if (!IsNodeRed(currentNode.RightChild) && !IsNodeRed(currentNode.RightChild.LeftChild))
+                {
+                    T tempHolder = currentNode.Value;
+                    currentNode = MoveRedRight(currentNode);
+                    if (!tempHolder.Equals(currentNode.Value))
+                    {
+                        //throw new Exception("Mikah Look at This!!!!!!!!!!!!!!!!");
+                        currentNode.RightChild = Remove(currentNode.RightChild, targetNode);
+                    }
+                    else 
+                    {
+                        Node<T> replacementNode = currentNode.FindMin();
+                        currentNode.ReplaceValue(replacementNode);
+                        currentNode.RightChild = Remove(currentNode.RightChild, replacementNode);
+                    }
                 }
                 else
                 {
                     Node<T> replacementNode = currentNode.FindMin();
                     currentNode.ReplaceValue(replacementNode);
                     currentNode.RightChild = Remove(currentNode.RightChild, replacementNode);
-                }      
+                }
             }
             currentNode = Fixup(currentNode);
             return currentNode;
