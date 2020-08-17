@@ -41,12 +41,11 @@ namespace RedBlackTree
 
         public Node<T> FindMin()
         {
-            if(LeftChild == null)
+            if(RightChild == null)
             {
-                return this;
+                return null;
             }
-
-            Node<T> currentNode = LeftChild;
+            Node<T> currentNode = RightChild;
             while(currentNode.LeftChild != null)
             {
                 currentNode = currentNode.LeftChild;

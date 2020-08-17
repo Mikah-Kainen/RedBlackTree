@@ -143,6 +143,7 @@ namespace RedBlackTree
                 return false;
             }
             RootNode = Remove(RootNode, targetNode);
+            Count--;
             return true;
         }
 
@@ -154,7 +155,11 @@ namespace RedBlackTree
             }
             if(targetNode.IsLessThan(currentNode))
             {
-                if(!IsNodeRed(currentNode.LeftChild) && !IsNodeRed(currentNode.LeftChild.LeftChild))
+                if(currentNode.LeftChild == null)
+                {
+                    throw new Exception("targetNotFound");
+                }
+                if (!IsNodeRed(currentNode.LeftChild) && !IsNodeRed(currentNode.LeftChild.LeftChild))
                 {
                     currentNode = MoveRedLeft(currentNode);
                 }
@@ -166,13 +171,14 @@ namespace RedBlackTree
                 {
                     currentNode = RightRotation(currentNode);
                 }
-                if(targetNode.Equals(currentNode) && currentNode.IsLeafNode())
+                if(currentNode.Equals(targetNode) && currentNode.IsLeafNode())
                 {
+                    currentNode = null;
                     return null;
                 }
-                else if(!targetNode.Equals(currentNode))
+                else if(!currentNode.Equals(targetNode) || (!IsNodeRed(currentNode.RightChild) && !IsNodeRed(currentNode.RightChild.LeftChild)))
                 {
-                    if (!IsNodeRed(currentNode.RightChild) && !IsNodeRed(currentNode.RightChild.LeftChild))
+                    if(!IsNodeRed(currentNode.RightChild) && !IsNodeRed(currentNode.RightChild.LeftChild))
                     {
                         currentNode = MoveRedRight(currentNode);
                     }
@@ -180,30 +186,72 @@ namespace RedBlackTree
                 }
                 else
                 {
-                    Node<T> MovedNode = currentNode;
-                    if (!IsNodeRed(currentNode.RightChild) && !IsNodeRed(currentNode.RightChild.LeftChild))
-                    {
-                        currentNode = MoveRedRight(currentNode);
-
-
-                        ////////////////////////////////
-                        ////////////////////////////
-                        //////////////////////////////
-                        ////////////////////////////////
-
-                    }
-                    else
-                    {
-                        Node<T> replacementNode = currentNode.RightChild.FindMin();
-                        currentNode.ReplaceValue(replacementNode);
-                        currentNode.RightChild = Remove(currentNode.RightChild, replacementNode);
-                    }
-                }
+                    Node<T> replacementNode = currentNode.FindMin();
+                    currentNode.ReplaceValue(replacementNode);
+                    currentNode.RightChild = Remove(currentNode.RightChild, replacementNode);
+                }      
             }
-
             currentNode = Fixup(currentNode);
             return currentNode;
         }
+
+        //private Node<T> Remove(Node<T> currentNode, Node<T> targetNode)
+        //{
+        //    if(currentNode == null)
+        //    {
+        //        return null;
+        //    }
+        //    if(targetNode.IsLessThan(currentNode))
+        //    {
+        //        if(!IsNodeRed(currentNode.LeftChild) && !IsNodeRed(currentNode.LeftChild.LeftChild))
+        //        {
+        //            currentNode = MoveRedLeft(currentNode);
+        //        }
+        //        currentNode.LeftChild = Remove(currentNode.LeftChild, targetNode);
+        //    }
+        //    else
+        //    {
+        //        if(IsNodeRed(currentNode.LeftChild))
+        //        {
+        //            currentNode = RightRotation(currentNode);
+        //        }
+        //        if(targetNode.Equals(currentNode) && currentNode.IsLeafNode())
+        //        {
+        //            return null;
+        //        }
+        //        else if(!targetNode.Equals(currentNode))
+        //        {
+        //            if (!IsNodeRed(currentNode.RightChild) && !IsNodeRed(currentNode.RightChild.LeftChild))
+        //            {
+        //                currentNode = MoveRedRight(currentNode);
+        //            }
+        //            currentNode.RightChild = Remove(currentNode.RightChild, targetNode);
+        //        }
+        //        else
+        //        {
+        //            if (!IsNodeRed(currentNode.RightChild) && !IsNodeRed(currentNode.RightChild.LeftChild))
+        //            {
+        //                currentNode = MoveRedRight(currentNode);
+        //                Node<T> removeNode = currentNode.RightChild;
+
+        //                Node<T> replacementNode = removeNode.RightChild.FindMin();
+        //                removeNode.ReplaceValue(replacementNode);
+        //                removeNode.RightChild = Remove(removeNode.RightChild, replacementNode);
+
+        //                currentNode.RightChild = Fixup(removeNode);
+        //            }
+        //            else
+        //            {
+        //                Node<T> replacementNode = currentNode.RightChild.FindMin();
+        //                currentNode.ReplaceValue(replacementNode);
+        //                currentNode.RightChild = Remove(currentNode.RightChild, replacementNode);
+        //            }
+        //        }
+        //    }
+
+        //    currentNode = Fixup(currentNode);
+        //    return currentNode;
+        //}
 
         public Node<T> Fixup(Node<T> currentNode)
         {
