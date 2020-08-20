@@ -155,10 +155,6 @@ namespace RedBlackTree
             }
             if(targetNode.IsLessThan(currentNode))
             {
-                if(currentNode.LeftChild == null)
-                {
-                    throw new Exception("targetNotFound");
-                }
                 if (!IsNodeRed(currentNode.LeftChild) && !IsNodeRed(currentNode.LeftChild.LeftChild))
                 {
                     currentNode = MoveRedLeft(currentNode);
@@ -173,38 +169,24 @@ namespace RedBlackTree
                 }
                 if (currentNode.Equals(targetNode) && currentNode.IsLeafNode())
                 {
-                    currentNode = null;
                     return null;
                 }
-                else if (!currentNode.Equals(targetNode))
+                if(currentNode.RightChild != null)
                 {
-                    if (!IsNodeRed(currentNode.RightChild) && !IsNodeRed(currentNode.RightChild.LeftChild))
+                    if(!IsNodeRed(currentNode.RightChild) && !IsNodeRed(currentNode.RightChild.LeftChild))
                     {
                         currentNode = MoveRedRight(currentNode);
                     }
-                    currentNode.RightChild = Remove(currentNode.RightChild, targetNode);
-                }
-                else if (!IsNodeRed(currentNode.RightChild) && !IsNodeRed(currentNode.RightChild.LeftChild))
-                {
-                    T tempHolder = currentNode.Value;
-                    currentNode = MoveRedRight(currentNode);
-                    if (!tempHolder.Equals(currentNode.Value))
+                    if(currentNode.Value.Equals(targetNode.Value))
                     {
-                        //throw new Exception("Mikah Look at This!!!!!!!!!!!!!!!!");
+                        Node<T> min = currentNode.FindMin();
+                        currentNode.ReplaceValue(min);
+                        currentNode.RightChild = Remove(currentNode.RightChild, min);
+                    }
+                    else
+                    {
                         currentNode.RightChild = Remove(currentNode.RightChild, targetNode);
                     }
-                    else 
-                    {
-                        Node<T> replacementNode = currentNode.FindMin();
-                        currentNode.ReplaceValue(replacementNode);
-                        currentNode.RightChild = Remove(currentNode.RightChild, replacementNode);
-                    }
-                }
-                else
-                {
-                    Node<T> replacementNode = currentNode.FindMin();
-                    currentNode.ReplaceValue(replacementNode);
-                    currentNode.RightChild = Remove(currentNode.RightChild, replacementNode);
                 }
             }
             currentNode = Fixup(currentNode);

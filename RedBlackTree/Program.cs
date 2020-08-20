@@ -8,38 +8,30 @@ namespace RedBlackTree
         {
             RedBlack<int> Tree = new RedBlack<int>();
 
-            //for(int i = 0; i < 10; i ++)
-            //{
-            //    Tree.Add(i);
-            //}
+            //Tree.Add(10);
+            //Tree.Add(15);
+            //Tree.Add(5);
+            //Tree.Add(25);
+            //Tree.Add(20);
+            //Tree.Add(30);
 
-            //for(int i = 19; i > 10; i --)
-            //{
-            //    Tree.Add(i);
-            //}
-            Tree.Add(5);
-            Tree.Add(17);
-            Tree.Add(19);
-            Tree.Add(20);
-            Tree.Add(21);
-            Tree.Add(3);
-            Tree.Add(4);
-            Tree.Add(1);
-            Tree.Remove(4);
-            Tree.Remove(20);
+            for (int x = 0; x < 1000; x ++)
+            {
+                Random random = new Random();
+                int[] numbers = new int[1000];
 
-            Tree.Remove(17);
-            Tree.Add(20);
-            Tree.Add(16);
-            Tree.Remove(21);
-            Tree.Add(1);
-            Tree.Add(1);
-            Tree.Add(5);
-            Tree.Add(6);
-            Tree.Remove(20);
-            Tree.Remove(16);
-            Tree.Add(0);
-            Tree.Add(0);
+                for (int i = 0; i < 1000; i++)
+                {
+                    numbers[i] = random.Next(0, 10000);
+                    Tree.Add(numbers[i]);
+                }
+                for (int i = 0; i < 1000; i += 2)
+                {
+                    Tree.Remove(numbers[i]);
+                }
+
+                Console.WriteLine("Finished");
+            }
         }
     }
 }
