@@ -17,6 +17,92 @@ namespace RedBlackTree
             RootNode = null;
         }
 
+        public Node<T> FindFloor(T targetValue)
+        {
+            if (RootNode == null || targetValue.CompareTo(FindMind().Value) < 0)
+            {
+                return null;
+            }
+            return FindFloor(targetValue, RootNode, RootNode);
+        }
+
+        public Node<T> FindCeiling(T targetValue)
+        {
+            if(RootNode == null || targetValue.CompareTo(FindMax().Value) > 0)
+            {
+                return null;
+            }
+            return FindCeiling(targetValue, RootNode, RootNode);
+        }
+
+        private Node<T> FindFloor(T targetValue, Node<T> currentNode, Node<T> bestNode)
+        {
+            if(currentNode == null)
+            {
+                return bestNode;
+            }
+            if (targetValue.CompareTo(currentNode.Value) == 0)
+            {
+                return currentNode;
+            }
+            if(targetValue.CompareTo(currentNode.Value) > 0)
+            {
+                return FindFloor(targetValue, currentNode.RightChild, currentNode);
+            }
+            else
+            {
+                return FindFloor(targetValue, currentNode.LeftChild, bestNode);
+            }
+        }
+
+        private Node<T> FindCeiling(T targetValue, Node<T> currentNode, Node<T> bestNode)
+        {
+            if(currentNode == null)
+            {
+                return bestNode;
+            }
+            if(targetValue.CompareTo(currentNode.Value) == 0)
+            {
+                return currentNode;
+            }
+            else if(targetValue.CompareTo(currentNode.Value) < 0)
+            {
+                return FindCeiling(targetValue, currentNode.LeftChild, currentNode);
+            }
+            else
+            {
+                return FindCeiling(targetValue, currentNode.RightChild, bestNode);
+            }
+        }
+
+        public Node<T> FindMind()
+        {
+            if(RootNode == null)
+            {
+                return null;
+            }
+            Node<T> currentNode = RootNode;
+            while(currentNode.LeftChild != null)
+            {
+                currentNode = currentNode.LeftChild;
+            }
+            return currentNode;
+        }
+
+        public Node<T> FindMax()
+        {
+            if(RootNode == null)
+            {
+                return null;
+            }
+            Node<T> currentNode = RootNode;
+            while(currentNode.RightChild != null)
+            {
+                currentNode = currentNode.RightChild;
+            }
+            return currentNode;
+        }
+
         private Node<T> FindParent(Node<T> targetNode)
         {
             Node<T> currentNode = RootNode;
